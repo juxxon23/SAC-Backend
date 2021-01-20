@@ -14,7 +14,7 @@ class User(db.Model):
     phone_u = db.Column(db.String(12), nullable=False)
     regional_u = db.Column(db.String(100), nullable=False)
     center_u = db.Column(db.String(100), nullable=False)
-    bonding_type = db.Column(db.String(20), db.ForeignKey('Bonding.id_bon'), nullable=False)
+    bonding_type = db.Column(db.Integer, db.ForeignKey('Bonding.id_bon'), nullable=False)
     comp_fo = db.relationship(
         'Competencies', backref='myComp', lazy='dynamic', foreign_keys='Competencies.document_user')
     res_fo = db.relationship(
@@ -35,13 +35,12 @@ class User(db.Model):
 class Competencies(db.Model):
     __tablename__ = 'Competencies'
 
-    id_comp = db.Column(db.String(5), primary_key=True, nullable=False, index=True)
+    id_comp = db.Column(db.Integer, primary_key=True, nullable=False, index=True)
     document_user = db.Column(db.String(20), db.ForeignKey('User.document_u'), nullable=False)
     description = db.Column(db.String(255), nullable=False)
 
 
     def __init__(self, id_comp, document_user, description):
-        self.id_comp = id_comp
         self.document_user = document_user
         self.description = description
 
@@ -49,22 +48,20 @@ class Competencies(db.Model):
 class Results(db.Model):
     __tablename__ = 'Results'
 
-    id_res = db.Column(db.String(5), primary_key=True, nullable=False, index=True)
+    id_res = db.Column(db.Integer, primary_key=True, nullable=False, index=True)
     document_user = db.Column(db.String(20), db.ForeignKey('User.document_u'), nullable=False)
     description = db.Column(db.String(255))
 
     def __init__(self, id_res, document_user, description):
-        self.id_res = id_res
         self.document_user = document_user
         self.description = description
 
 class Bonding(db.Model):
     __tablename__ = 'Bonding'
 
-    id_bon = db.Column(db.String(5), primary_key=True, nullable=False, index=True)
+    id_bon = db.Column(db.Integer, primary_key=True, nullable=False, index=True)
     description = db.Column(db.String(255))
     user_bon = db.relationship('User', backref='myBon', lazy='dynamic', foreign_keys='User.bonding_type')
 
-    def __init__(self, id_bon, description):
-        self.id_bon = id_bon
+    def __init__(self, description):
         self.description = description
