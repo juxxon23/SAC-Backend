@@ -35,7 +35,7 @@ class User(db.Model):
 class Competencies(db.Model):
     __tablename__ = 'Competencies'
 
-    id_comp = db.Column(db.String(5), primary_key=True, nullable=False)
+    id_comp = db.Column(db.String(5), primary_key=True, nullable=False, index=True)
     document_user = db.Column(db.String(20), db.ForeignKey('User.document_u'), nullable=False)
     description = db.Column(db.String(255), nullable=False)
 
@@ -49,7 +49,7 @@ class Competencies(db.Model):
 class Results(db.Model):
     __tablename__ = 'Results'
 
-    id_res = db.Column(db.String(5), primary_key=True, nullable=False)
+    id_res = db.Column(db.String(5), primary_key=True, nullable=False, index=True)
     document_user = db.Column(db.String(20), db.ForeignKey('User.document_u'), nullable=False)
     description = db.Column(db.String(255))
 
@@ -61,7 +61,7 @@ class Results(db.Model):
 class Bonding(db.Model):
     __tablename__ = 'Bonding'
 
-    id_bon = db.Column(db.String(5), primary_key=True, nullable=False)
+    id_bon = db.Column(db.String(5), primary_key=True, nullable=False, index=True)
     description = db.Column(db.String(255))
     user_bon = db.relationship('User', backref='myBon', lazy='dynamic', foreign_keys='User.bonding_type')
 
