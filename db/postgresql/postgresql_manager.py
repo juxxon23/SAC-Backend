@@ -2,7 +2,7 @@ from db.postgresql.model import db
 from sqlalchemy.exc import SQLAlchemyError
 
 
-class PostgresqlManager:
+class PostgresqlManager():
     def add(self, *args):
         try:
             for new in args:
