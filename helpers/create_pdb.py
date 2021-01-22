@@ -1,5 +1,5 @@
 from flask import Flask
-from db.postgresql.model import db, Bonding
+from db.postgresql.model import db, Bonding, User
 from db.postgresql.postgresql_manager import PostgresqlManager
 
 def create_app():
@@ -9,7 +9,14 @@ def create_app():
     with app.app_context():
         db.init_app(app)
         db.create_all()
-        contratista = Bonding(description = 'Contratista')
-        planta = Bonding(description = 'Planta')
-        postgreql_tool.add(contratista, planta)
-    return app
+        # query en bonding para determinar si existen los valores predefinidos
+        if True:
+            return app
+        else:
+            contratista = Bonding(description = 'Contratista')
+            planta = Bonding(description = 'Planta')
+            postgreql_tool.add(contratista, planta, admin)
+            return app
+
+        
+    
