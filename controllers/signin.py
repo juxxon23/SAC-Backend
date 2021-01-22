@@ -5,36 +5,27 @@ from marshmallow import validate
 from helpers.encrypt_pass import Crypt
 from db.postgresql.model import User
 from validators.signin_u import RegisterUser, RegisterExtra
+from db.postgresql.postgresql_manager import PostgresqlManager
 
 # Se incializan las variables con su respectivo metodo
 encrypt = Crypt()
 user_schema1 = RegisterUser()
 user_schema2 = RegisterExtra()
+postgres_tool = PostgresqlManager()
 
-# Se crea la variable arreglo la cual tendra un rol el cual es base de datos.
-arreglo = [{'email_inst':'nelson@misena.edu.co', 'document_u': '1094972663', 'password_u': 'password1','name_u':'Nelson Andres', 'lastname_u': 'Tique Morales', 'phone_u': '3142184354', 'regional_u': 'Quindio', 'centro_u':'centro de comercio y turismo', 'competencies_u': 'python', 'results_u': 'python basico', 'bonding_type': 'planta'}]
-tamaño = len(arreglo)
-
-# Se crea la clase Signin
 class Signin(MethodView):
-
     def post(self):
         try:
-            users_signin = request.get_json()
-            errors = user_schema1.validate(users_signin)
+            user_signin = request.get_json()
+            errors = user_schema1.validate(user_signin)
             if errors:
                 return jsonify({'state': 'error', 'error': errors}), 403
-            for i in range(tamaño):
-                if users_signin['email_inst'] == arreglo[i]['email_inst'] or users_signin['document_u'] == arreglo[i]['document_u']:
-                    return jsonify({'state':'existe'})
-            else:
-                users_signin['password_u'] = encrypt.hash_string(users_signin['password_u'])
-                state = arreglo.append(users_signin)
-                print('successfully registered')
-                return jsonify({'state': 'ok'}), 203
+            document = postgres_tool.get_by(User, user_signin['email_inst'])
+            return jsonify({'state': 'ok'}), 203
         except:
-            print('Error in the form')
-            return jsonify({'state': 'error'}), 403
+            return jsonify({'state': 'error in the form'}), 403
+
+
 
 #Se crea la clase SigninExtra
 class SigninExtra(MethodView):
