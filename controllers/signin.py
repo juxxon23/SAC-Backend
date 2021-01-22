@@ -3,7 +3,7 @@ from flask import jsonify, request
 from flask.views import MethodView
 from marshmallow import validate
 from helpers.encrypt_pass import Crypt
-from db.postgresql.model import Signin
+from db.postgresql.model import User
 from validators.signin_u import RegisterUser, RegisterExtra
 
 # Se incializan las variables con su respectivo metodo
