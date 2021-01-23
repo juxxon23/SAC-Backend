@@ -1,7 +1,7 @@
 from flask import jsonify, request
 from flask.views import MethodView
-from validators.user_u import LoginUser
-from data.config_key import KEY_TOKEN_AUTH
+from validators.user_val import LoginUser
+from config.config_key import KEY_TOKEN_AUTH
 from db.postgresql.model import User, Competencies
 from db.postgresql.postgresql_manager import PostgresqlManager
 import bcrypt

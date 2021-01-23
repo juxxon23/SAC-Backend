@@ -1,16 +1,12 @@
 # Se importan las librerias y clases respectivas para hacer el signin
-from flask import jsonify, request
-from flask.views import MethodView
 from marshmallow import validate
+from flask.views import MethodView
+from flask import jsonify, request
 from helpers.encrypt_pass import Crypt
-<<<<<<< HEAD
-from db.postgresql.model import User, Competencies, Results
-from validators.user_u import RegisterUser, RegisterExtra
-=======
-from db.postgresql.model import User
 from validators.user_val import RegisterUser, RegisterExtra
->>>>>>> 13fc69e5ab43aaf22af074f9e926ce8d75833288
 from db.postgresql.postgresql_manager import PostgresqlManager
+from db.postgresql.model import User, Competencies, Results
+
 
 
 # Se incializan las variables con su respectivo metodo
@@ -28,7 +24,6 @@ class Signin(MethodView):
             errors = user_schema1.validate(user_signin)
             if errors:
                 return jsonify({'state': 'error', 'error': errors}), 403
-<<<<<<< HEAD
             document_cp = postgres_tool.get_by(User, user_signin['document_u'])
             if document_cp != None:
                 return jsonify({'state': 'user exists'}), 403
@@ -52,23 +47,11 @@ class Signin(MethodView):
                 description=user_signin['description_r']
             )
             state = postgres_tool.add(new_user, new_competencies, new_results)
-            print('successfully registered')
             return jsonify({'state': 'ok'})
-=======
-            document = postgres_tool.get_by(User, user_signin['document_u'])
-            return jsonify({'state': 'ok'}), 203
->>>>>>> 13fc69e5ab43aaf22af074f9e926ce8d75833288
         except:
-            print('error in form')
             return jsonify({'state': 'error'})
 
 
-<<<<<<< HEAD
-# Se crea la clase SigninExtra
-class SigninExtra(MethodView):
-
-=======
->>>>>>> 13fc69e5ab43aaf22af074f9e926ce8d75833288
     def put(self):
         try:
             users_signinEx = request.get_json()
