@@ -41,3 +41,13 @@ class PostgresqlManager():
             return e
         except:
             return 'error'
+
+    # table.query.filter_by(col=data).first()
+    def get_by(self, table_name, value):
+        try:
+            data = db.session.query(table_name).filter_by(document_u = value).first()
+            return data
+        except SQLAlchemyError as e:
+            return e
+        except:
+            return 'error in consulta'

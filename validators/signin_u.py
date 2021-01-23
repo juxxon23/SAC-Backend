@@ -16,11 +16,11 @@ class RegisterUser(Schema):
         required=False)
     regional_u = fields.String(
         required=False)
-    centro_u = fields.String(
+    center_u = fields.String(
         required=False)
-    competencies_u = fields.String(
+    description_c = fields.String(
         required=False)
-    results_u = fields.String(
+    description_r = fields.String(
         required=False)
     bonding_type = fields.String(
         required=False)
