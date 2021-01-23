@@ -15,7 +15,7 @@ def create_app():
         else:
             contratista = Bonding(description = 'Contratista')
             planta = Bonding(description = 'Planta')
-            postgreql_tool.add(contratista, planta, admin)
+            postgreql_tool.add(contratista, planta)
             return app
 
         

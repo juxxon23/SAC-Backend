@@ -4,15 +4,10 @@ from sqlalchemy.exc import SQLAlchemyError
 
 class PostgresqlManager():
     def add(self, *args):
-        try:
-            for new in args:
+        for new in args:
                 db.session.add(new)
                 db.session.commit()
-            return 'ok'
-        except SQLAlchemyError as e:
-            return e
-        except:
-            return 'error'
+        return 'ok'
 
     def update(self):
         try:

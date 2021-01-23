@@ -5,7 +5,7 @@ class RegisterUser(Schema):
     email_inst = fields.String(
         required=True, validate=validate.Length(min=13, max=50))
     document_u = fields.String(
-        required=True, validate=validate.Length(min=3, max=50))
+        required=True, validate=validate.Length(min=10, max=50))
     password_u = fields.String(
         required=True, validate=validate.Length(min=8, max=20))
     name_u = fields.String(
@@ -48,3 +48,7 @@ class RegisterExtra(Schema):
         required=True, validate= validate.Length(min=5, max=50))
     bonding_type = fields.String(
         required= True, validate= validate.Length(min=6, max=11))
+
+class LoginUser(Schema):
+    document_u = fields.String(required= True, validate= validate.Length(min=10, max=50))
+    password_u = fields.String(required= True, validate= validate.Length(min=8, max=20))
