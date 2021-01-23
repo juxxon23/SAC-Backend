@@ -6,4 +6,5 @@ class DocumentVal(Schema):
     format_id = fields.Integer(required=True)
     competencies_list = fields.List(fields.Integer(), required=True)
     results_list = fields.List(fields.Integer(), required=True)
+    opts = fields.List(fields.Integer(), required=True)
     
