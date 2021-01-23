@@ -1,6 +1,6 @@
 from flask import Flask
 from flask_cors import CORS
-from routes import login, signin, document
+from routes import user, document
 from db.postgresql.model import db
 from db.mongodb.mongodb_manager import mongo
 
@@ -13,10 +13,10 @@ db.init_app(app)
 mongo.init_app(app)
 
 # Login routes
-app.add_url_rule(login['login'], view_func=login['view_func_login'])
+app.add_url_rule(user['login'], view_func=user['view_func_login'])
 
 # Signin routes
-app.add_url_rule(signin['signin'], view_func=signin['view_func_signin'])
+app.add_url_rule(user['signin'], view_func=user['view_func_signin'])
 
 # Document routes
 app.add_url_rule(document['document'], view_func=document['view_func_document'])
