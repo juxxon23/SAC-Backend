@@ -39,7 +39,7 @@ class Competencies(db.Model):
     description = db.Column(db.String(255), nullable=False)
 
 
-    def __init__(self, id_comp, document_user, description):
+    def __init__(self, document_user, description):
         self.document_user = document_user
         self.description = description
 
@@ -51,7 +51,7 @@ class Results(db.Model):
     document_user = db.Column(db.String(20), db.ForeignKey('User.document_u'), nullable=False)
     description = db.Column(db.String(255))
 
-    def __init__(self, id_res, document_user, description):
+    def __init__(self, document_user, description):
         self.document_user = document_user
         self.description = description
 
