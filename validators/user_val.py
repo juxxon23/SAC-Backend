@@ -1,6 +1,5 @@
 from marshmallow import Schema, fields, validate, validates, ValidationError
 
-
 class RegisterUser(Schema):
     email_inst = fields.String(
         required=True, validate=validate.Length(min=13, max=50))
@@ -49,6 +48,7 @@ class RegisterExtra(Schema):
     description_r = fields.String(
         required=True, validate=validate.Length(min=5, max=50))
     bonding_type = fields.String(
+<<<<<<< HEAD
         required=True)
 
 
@@ -57,3 +57,11 @@ class LoginUser(Schema):
         required=True, validate=validate.Length(min=10, max=50))
     password_u = fields.String(
         required=True, validate=validate.Length(min=8, max=20))
+=======
+        required= True, validate= validate.Length(min=6, max=11))
+
+
+class LoginUser(Schema):
+    document_u = fields.String(required= True, validate= validate.Length(min=10, max=50))
+    password_u = fields.String(required= True, validate= validate.Length(min=8, max=20))
+>>>>>>> b35f639dfb78ca56d4708a6c740779dc8e619eb8

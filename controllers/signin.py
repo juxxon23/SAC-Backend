@@ -1,11 +1,16 @@
 # Se importan las librerias y clases respectivas para hacer el signin
-from flask import jsonify, request
-from flask.views import MethodView
 from marshmallow import validate
+from flask.views import MethodView
+from flask import jsonify, request
 from helpers.encrypt_pass import Crypt
+<<<<<<< HEAD
 from db.postgresql.model import User, Competencies, Results
+=======
+>>>>>>> b35f639dfb78ca56d4708a6c740779dc8e619eb8
 from validators.user_val import RegisterUser, RegisterExtra
 from db.postgresql.postgresql_manager import PostgresqlManager
+from db.postgresql.model import User, Competencies, Results
+
 
 
 # Se incializan las variables con su respectivo metodo
@@ -46,16 +51,17 @@ class Signin(MethodView):
                 description=user_signin['description_r']
             )
             state = postgres_tool.add(new_user, new_competencies, new_results)
-            print('successfully registered')
             return jsonify({'state': 'ok'})
         except:
-            print('error in form')
             return jsonify({'state': 'error'})
 
+<<<<<<< HEAD
 # Se crea la clase SigninExtra
 
 
 class SigninExtra(MethodView):
+=======
+>>>>>>> b35f639dfb78ca56d4708a6c740779dc8e619eb8
 
     def put(self):
         try:
