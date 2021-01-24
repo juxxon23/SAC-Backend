@@ -12,10 +12,8 @@ CORS(app, support_credentials= True)
 db.init_app(app)
 mongo.init_app(app)
 
-# Login routes
+# User routes
 app.add_url_rule(user['login'], view_func=user['view_func_login'])
-
-# Signin routes
 app.add_url_rule(user['signin'], view_func=user['view_func_signin'])
 
 # Document routes

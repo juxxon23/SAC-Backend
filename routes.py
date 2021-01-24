@@ -3,7 +3,7 @@ from controllers.signin import Signin
 from controllers.document import Document
 
 user = {
-    "signin": "/signin", "view_func_signin": Signin.as_view("app_signin")
+    "signin": "/signin", "view_func_signin": Signin.as_view("app_signin"),
     "login": "/login", "view_func_login": Login.as_view("app_login")
 }
 
