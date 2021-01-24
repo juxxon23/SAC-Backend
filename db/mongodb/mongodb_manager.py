@@ -12,7 +12,7 @@ class MongoDBManager():
             id_doc = mongo.db.documents.insert(doc_data)
             return id_doc
         except Exception as ex:
-            error_msg = {'error': 'error mongodb_tool add_doc', 'ex': ex}
+            error_msg = {'error': 'mongodb_tool add_doc', 'ex': str(ex)}
             return error_msg
 
 
@@ -21,7 +21,7 @@ class MongoDBManager():
             mongo.db.documents.delete_one({'_id':  ObjectId(id_acta)})
             return 'ok'
         except Exception as ex:
-            error_msg = {'error': 'error mongodb_tool delete_doc', 'ex': ex}
+            error_msg = {'error': 'mongodb_tool delete_doc', 'ex': str(ex)}
             return error_msg
 
 
@@ -33,7 +33,7 @@ class MongoDBManager():
                 )
             return 'ok'
         except Exception as ex:
-            error_msg = {'error': 'error mongodb_tool update_doc', 'ex': ex}
+            error_msg = {'error': 'mongodb_tool update_doc', 'ex': str(ex)}
             return error_msg
 
 
@@ -43,7 +43,7 @@ class MongoDBManager():
             #docs_d = dumps(docs)
             return docs
         except Exception as ex:
-            error_msg = {'error': 'error mongodb_tool get_all_docs', 'ex': ex}
+            error_msg = {'error': 'mongodb_tool get_all_docs', 'ex': str(ex)}
             return error_msg
 
 
@@ -52,5 +52,5 @@ class MongoDBManager():
             doc = mongo.db.documents.find_one({'_id': ObjectId(id_acta)})
             return doc
         except Exception as ex:
-            error_msg = {'error': 'error mongodb_tool get_by_id', 'ex': ex}
+            error_msg = {'error': 'mongodb_tool get_by_id', 'ex': str(ex)}
             return error_msg
