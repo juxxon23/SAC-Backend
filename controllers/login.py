@@ -20,7 +20,7 @@ class Login(MethodView):
             user_login = request.get_json()
             errors = user_schema.validate(user_login)
             if errors:
-                return jsonify({'status': 'validators', 'error': errors})
+                return jsonify({'status': 'validators', 'error': errors}), 403
             user_cred = postgres_tool.get_by(User, user_login['document_u'])
             if user_cred == None:
                 return jsonify({'status': 'document'}), 403

@@ -3,10 +3,10 @@ from marshmallow import validate
 from flask.views import MethodView
 from flask import jsonify, request
 from helpers.encrypt_pass import Crypt
+from db.postgresql.model import User, Competencies, Results
 from validators.user_val import RegisterUser, RegisterExtra
 from db.postgresql.postgresql_manager import PostgresqlManager
 from db.postgresql.model import User, Competencies, Results
-
 
 
 # Se incializan las variables con su respectivo metodo
@@ -17,7 +17,7 @@ postgres_tool = PostgresqlManager()
 
 
 class Signin(MethodView):
-    
+
     def post(self):
         try:
             user_signin = request.get_json()
@@ -51,13 +51,22 @@ class Signin(MethodView):
         except:
             return jsonify({'state': 'error'})
 
-
     def put(self):
         try:
-            users_signinEx = request.get_json()
-            errors = user_schema2.validate(users_signinEx)
-            if errors:
-                return ({'status': 'error', 'error': errors}), 403
+            users_signinExt = request.get_json()
+            erorrs = user_schema2.validate(users_signinExt)
+            if erorrs:
+                return jsonify({'state': 'error', 'error': erorrs}), 403
+            document = postgres_tool.get_by(
+                User, users_signinExt['document_u'])
+            document.name_u = users_signinExt['name_u']
+            document.lastname_u = users_signinExt['lastname_u']
+            document.phone_u = users_signinExt['phone_u']
+            document.regional_u = users_signinExt['regional_u']
+            document.center_u = users_signinExt['center_u']
+            document.description_c = users_signinExt['description_c']
+            document.description_r = users_signinExt['description_r']
+            state = postgres_tool.update()
             return jsonify({'state': 'ok'}), 203
-        except:
-            return jsonify({'status': 'error'}), 403
+        except Exception as e:
+            return jsonify({'status': 'error', 'error': e}), 403
