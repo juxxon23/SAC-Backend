@@ -9,13 +9,14 @@ def create_app():
     with app.app_context():
         db.init_app(app)
         db.create_all()
-        # query en bonding para determinar si existen los valores predefinidos
-        if True:
+        bonding_list = postgreql_tool.get_all(Bonding)
+        if len(bonding_list) == 3:
             return app
         else:
-            contratista = Bonding(description = 'Contratista')
-            planta = Bonding(description = 'Planta')
-            postgreql_tool.add(contratista, planta)
+            contratista = Bonding(description='Contratista')
+            planta = Bonding(description='Planta')
+            default = Bonding(description='Defecto')
+            postgreql_tool.add(contratista, planta, default)
             return app
 
         
