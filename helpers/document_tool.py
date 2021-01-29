@@ -1,7 +1,8 @@
+import os
 from datetime import date, time
 from unidecode import unidecode
 from pydocx import PyDocX
-from html2text import html2text
+from helpers.html2text import html2text
 from data.document.document_keys import header_keys, body_keys, footer_keys
 from data.document.document_keys import headers_colm, body_colm, footer_colm
 
@@ -11,7 +12,7 @@ class DocumentTool():
     """DocumentTool: Manipulacion de documentos 'Actas de compromiso'."""
     __author__ = "Grimpoteuthis (jphenao979@misena.edu.co)"
     __contributors__ = ["Nelson Andres Tique", "natique03@misena.edu.co"]
-    
+
     # List with document sections - [header, body, footer]
     document_content = {}
 
@@ -45,14 +46,11 @@ class DocumentTool():
 
     # opt : string - template option
     def template_selector(self, opt):
-        if opt == 1:
-            template = self.read_html('data/documents/1.txt')
-            return template
-        elif opt == 2:
-            template = self.read_html('data/documents/2.txt')
+        if opt == 2:
+            template = 'data/document/2.txt'
             return template
         else:
-            template = self.read_html('data/documents/1.txt')
+            template = 'data/document/1.txt'
             return template
 
     # data_string : string - data
@@ -64,19 +62,24 @@ class DocumentTool():
             split_data[i] = split_data[i].strip()
         return split_data
 
-    # content : list - html_to_text data
+    # content : string - html data
     def get_content_data(self, content):
-        header = self.extract_header_data(content)
-        body_index = header['len_header']
-        body = self.extract_body_data_v1(content[body_index:len(content)])
-        footer_index = body_index + body[len(body)-1]
-        footer = self.extract_footer_data(content[footer_index:len(content)])
-        self.document_content = {
-            'header': header,
-            'body': body,
-            'footer': footer
-        }
-        return self.document_content
+        try:
+            text_data = self.html_to_text(content)
+            header = self.extract_header_data(text_data)
+            body_index = header['len_header']
+            body = self.extract_body_data_v1(text_data[body_index:len(text_data)])
+            footer_index = body_index + body[len(body)-1]
+            footer = self.extract_footer_data(
+                text_data[footer_index:len(text_data)])
+            self.document_content = {
+                'header': header,
+                'body': body,
+                'footer': footer
+            }
+            return self.document_content
+        except Exception as ex:
+            print(ex)
 
     # content : list - html text
     # header_keys : list - dict keys
@@ -182,4 +185,4 @@ class DocumentTool():
 #data = dt.read_html('1.txt')
 #split_data = dt.html_to_text(data)
 #document_content = dt.get_content_data(split_data)
-#print(document_content)
+# print(document_content)
