@@ -26,16 +26,15 @@ footer_keys = [
     'date_act',
     'obser',
     'reg_asis',
+    'objective',
     'num_asis',
     'full_name',
-    'list_asis',
-    'instru',
     'id_instru',
     'bonding_type',
     'company_depen',
     'mail_instru',
     'phone_ext',
-    'sign_instru'
+    'sign_instru',
 ]
 
 # Columns keys
@@ -61,6 +60,7 @@ body_colm = [
 ]
 
 footer_colm = [
+    'compromisos',
     'actividad',
     'responsable',
     'fecha',
