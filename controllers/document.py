@@ -26,14 +26,19 @@ class Document(MethodView):
                         '_id': str(doc['_id']),
                         'document_u': doc['document_u'],
                         'format_id': doc['format_id']
-                        #'content': doc['content']
                     })
-                return jsonify({'docs': docs_list})
+                return jsonify({'docs': docs_list}), 200
             else:
                 doc_user = mongo_tool.get_by_id(id_acta)
-                return jsonify({'user_doc': doc_user['content']}), 200
+                template_url = doc_tool.template_selector(doc_user['format_id'])
+                template = doc_tool.read_html(template_url)
+                u = {
+                    'document_u': doc_user['document_u'],
+                    'content': doc_user['content']
+                    }
+                return jsonify({'us': u, 'template': template}), 200
         except Exception as ex:
-            return jsonify({'status':'exception', 'ex': ex}), 400
+            return jsonify({'status':'exception', 'ex': str(ex)}), 400
 
     def post(self):
         try:
@@ -62,8 +67,8 @@ class Document(MethodView):
                 template = doc_tool.read_html(template_url)
                 answ = {'id_acta': str(msg), 'us': u, 'template': template}
                 return jsonify({"format": answ, "status": "ok"}), 200     
-        except:
-            return jsonify({"status":"exception"}), 400
+        except Exception as ex:
+            return jsonify({"status":"exception", "ex": str(ex)}), 400
     
     def put(self):
         try:
@@ -71,11 +76,11 @@ class Document(MethodView):
             errors = doc_up_schema.validate(data)
             if errors:
                 return jsonify({'status':'validation_error', 'errors':errors}), 400
-            content = doc_tool.get_content_data[data['content']]
+            content = doc_tool.get_content_data(data['content'])
             msg = mongo_tool.update_doc(data['id_acta'], data['document_u'], content)
             if msg == 'ok':
                 return jsonify({"status": "ok"}), 200    
             else:
                 return jsonify({"status": "update error", "ex": msg}), 400         
-        except:
-            return jsonify({"status":"exception"}), 400
+        except Exception as ex:
+            return jsonify({"status":"exception", "ex":str(ex)}), 400

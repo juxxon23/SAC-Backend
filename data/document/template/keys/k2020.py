@@ -64,6 +64,7 @@ footer_colm = [
     'actividad',
     'responsable',
     'fecha',
+    'asistentes',
     'observacion',
     'registro de asistencia',
     'objetivo (s)',
