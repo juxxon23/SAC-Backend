@@ -49,10 +49,12 @@ class Results(db.Model):
 
     id_res = db.Column(db.Integer, primary_key=True, nullable=False, index=True)
     document_user = db.Column(db.String(20), db.ForeignKey('User.document_u'), nullable=False)
+    comp_id = db.Column(db.Integer, db.ForeignKey('Competencies.id_comp'), nullable=False)
     description = db.Column(db.String(255))
 
-    def __init__(self, document_user, description):
+    def __init__(self, document_user, comp_id, description):
         self.document_user = document_user
+        self.comp_id = comp_id
         self.description = description
 
 class Bonding(db.Model):

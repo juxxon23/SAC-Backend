@@ -31,20 +31,20 @@ class Signin(MethodView):
                 document_u=user_signin['document_u'],
                 email_inst=user_signin['email_inst'],
                 password_u=encrypt.hash_string(user_signin['password_u']),
-                name_u=user_signin['name_u'],
-                lastname_u=user_signin['lastname_u'],
-                phone_u=user_signin['phone_u'],
-                regional_u=user_signin['regional_u'],
-                center_u=user_signin['center_u'],
-                bonding_type=user_signin['bonding_type'],
+                name_u='',
+                lastname_u='',
+                phone_u='',
+                regional_u='',
+                center_u='',
+                bonding_type=3,
             )
             new_competencies = Competencies(
                 document_user=user_signin['document_u'],
-                description=user_signin['description_c'],
+                description='',
             )
             new_results = Results(
                 document_user=user_signin['document_u'],
-                description=user_signin['description_r']
+                description=''
             )
             state = postgres_tool.add(new_user, new_competencies, new_results)
             return jsonify({'state': 'ok'})
