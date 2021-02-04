@@ -39,10 +39,14 @@ class Signin(MethodView):
                 bonding_type=3,
             )
             state = postgres_tool.add(new_user)
-            return jsonify({'state': 'ok', 'msg': str(state)}), 200
+            if state == 'ok':
+                return jsonify({'state': 'ok', 'msg': str(state)}), 200
+            elif type(state) == dict:
+                return jsonify({'status': state['error'], 'ex': state['ex']}), 403  
+            else:
+                return jsonify({'status': 'unknown'}), 403        
         except Exception as ex:
-            print(ex)
-            return jsonify({'state': 'error'}), 403
+            return jsonify({'state': 'exception', 'ex':str(ex)}), 403
 
     def put(self):
         try:
