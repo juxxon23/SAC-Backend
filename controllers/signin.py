@@ -38,18 +38,15 @@ class Signin(MethodView):
                 center_u='',
                 bonding_type=3,
             )
-            new_competencies = Competencies(
-                document_user=user_signin['document_u'],
-                description='',
-            )
-            new_results = Results(
-                document_user=user_signin['document_u'],
-                description=''
-            )
-            state = postgres_tool.add(new_user, new_competencies, new_results)
-            return jsonify({'state': 'ok'})
-        except:
-            return jsonify({'state': 'error'})
+            state = postgres_tool.add(new_user)
+            if state == 'ok':
+                return jsonify({'state': 'ok', 'msg': str(state)}), 200
+            elif type(state) == dict:
+                return jsonify({'status': state['error'], 'ex': state['ex']}), 403  
+            else:
+                return jsonify({'status': 'unknown'}), 403        
+        except Exception as ex:
+            return jsonify({'state': 'exception', 'ex':str(ex)}), 403
 
     def put(self):
         try:
