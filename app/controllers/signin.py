@@ -34,6 +34,7 @@ class Signin(MethodView):
                 name_u='',
                 lastname_u='',
                 phone_u='',
+                city_u='',
                 regional_u='',
                 center_u='',
                 bonding_type=3,
@@ -42,28 +43,27 @@ class Signin(MethodView):
             if state == 'ok':
                 return jsonify({'state': 'ok', 'msg': str(state)}), 200
             elif type(state) == dict:
-                return jsonify({'status': state['error'], 'ex': state['ex']}), 403  
+                return jsonify({'status': state['error'], 'ex': state['ex']}), 403
             else:
-                return jsonify({'status': 'unknown'}), 403        
+                return jsonify({'status': 'unknown'}), 403
         except Exception as ex:
-            return jsonify({'state': 'exception', 'ex':str(ex)}), 403
+            return jsonify({'state': 'exception', 'ex': str(ex)}), 403
 
     def put(self):
         try:
             users_signinExt = request.get_json()
-            erorrs = user_schema2.validate(users_signinExt)
-            if erorrs:
-                return jsonify({'state': 'error', 'error': erorrs}), 403
+            errors = user_schema2.validate(users_signinExt)
+            if errors:
+                return jsonify({'state': 'error', 'error': errors}), 403
             document = postgres_tool.get_by(
                 User, users_signinExt['document_u'])
             document.name_u = users_signinExt['name_u']
             document.lastname_u = users_signinExt['lastname_u']
             document.phone_u = users_signinExt['phone_u']
+            document.city_u = users_signinExt['city_u']
             document.regional_u = users_signinExt['regional_u']
             document.center_u = users_signinExt['center_u']
-            document.description_c = users_signinExt['description_c']
-            document.description_r = users_signinExt['description_r']
             state = postgres_tool.update()
-            return jsonify({'state': 'ok'}), 203
+            return jsonify({'state': 'ok', 'msg': state}), 203
         except Exception as e:
-            return jsonify({'status': 'error', 'error': e}), 403
+            return jsonify({'status': 'exception', 'ex': e}), 403

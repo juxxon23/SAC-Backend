@@ -59,6 +59,7 @@ class Document(MethodView):
                     'name': user_cred.name_u,
                     'lastname': user_cred.lastname_u,
                     'phone': user_cred.phone_u,
+                    'city' : user_cred.city_u,
                     'regional': user_cred.regional_u,
                     'center': user_cred.center_u,
                     'bonding': user_cred.bonding_type
