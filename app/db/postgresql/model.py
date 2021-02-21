@@ -11,6 +11,7 @@ class User(db.Model):
     name_u = db.Column(db.String(30), nullable=False)
     lastname_u = db.Column(db.String(30), nullable=False)
     phone_u = db.Column(db.String(12), nullable=False)
+    city_u = db.Column(db.String(30), nullable=False)
     regional_u = db.Column(db.String(100), nullable=False)
     center_u = db.Column(db.String(100), nullable=False)
     bonding_type = db.Column(db.Integer, db.ForeignKey('Bonding.id_bon'), nullable=False)
@@ -19,13 +20,14 @@ class User(db.Model):
     res_fo = db.relationship(
         'Results', backref='myRes', lazy='dynamic', foreign_keys='Results.document_user')
 
-    def __init__(self, document_u, email_inst, password_u, name_u, lastname_u, phone_u, regional_u, center_u, bonding_type):
+    def __init__(self, document_u, email_inst, password_u, name_u, lastname_u, phone_u, city_u, regional_u, center_u, bonding_type):
         self.document_u = document_u
         self.email_inst = email_inst
         self.password_u = password_u
         self.name_u = name_u
         self.lastname_u = lastname_u
         self.phone_u = phone_u
+        self.city_u = city_u
         self.regional_u = regional_u
         self.center_u = center_u
         self.bonding_type = bonding_type
