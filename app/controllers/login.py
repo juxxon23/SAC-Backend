@@ -20,17 +20,17 @@ class Login(MethodView):
             user_login = request.get_json()
             errors = user_schema.validate(user_login)
             if errors:
-                return jsonify({'status': 'validators', 'error': errors}), 403
+                return jsonify({'status': 'validators', 'error': errors}), 400
             user_cred = postgres_tool.get_by(User, user_login['document_u'])
             if user_cred == None:
-                return jsonify({'status': 'document'}), 403
+                return jsonify({'status': 'document'}), 400
             elif type(user_cred) == dict:
-                return jsonify({'status': user_cred['error'], 'ex': user_cred['ex']}), 403  
+                return jsonify({'status': user_cred['error'], 'ex': user_cred['ex']}), 400  
             else:
                 if crypt.check_hash(user_login['password_u'], user_cred.password_u):
                     encoded_jwt = jwt.encode({'exp': datetime.datetime.utcnow() + datetime.timedelta(seconds=300), 'nombre': user_cred.name_u}, app.config['SECRET_KEY'], algorithm='HS256')
-                    return jsonify({'status': 'welcome', 'token': encoded_jwt}), 203
+                    return jsonify({'status': 'welcome', 'token': encoded_jwt}), 200
                 else:
-                    return jsonify({'status': 'password'}), 403
+                    return jsonify({'status': 'password'}), 400
         except Exception as ex:
-            return jsonify({'status': 'exception', 'ex': str(ex)}), 403
+            return jsonify({'status': 'exception', 'ex': str(ex)}), 400

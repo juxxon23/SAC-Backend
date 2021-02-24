@@ -6,7 +6,7 @@ class TestLogin(unittest.TestCase):
 
     app = create_app()
 
-    # Check for status code
+
     def test_access(self):
         client = self.app.test_client(self)
         rv = client.post('/login', json={
@@ -16,7 +16,20 @@ class TestLogin(unittest.TestCase):
         print('\n----------------------------------------------------------------------\n-----------------------------JSON CONTENT-----------------------------\n',
               json_data, '\n----------------------------------------------------------------------\n')
         statuscode = rv.status_code
-        self.assertEqual(statuscode, 203)
+        self.assertEqual(statuscode, 200)
+        
+    # Check for status code
+    def test_user(self):
+        client = self.app.test_client(self)
+        rv = client.post('/login', json={
+            'document_u': '1096999999', 'password_u': 'pass12345'
+        })
+        json_data = rv.get_json()
+        print('\n----------------------------------------------------------------------\n-----------------------------JSON CONTENT-----------------------------\n',
+              json_data, '\n----------------------------------------------------------------------\n')
+        statuscode = rv.status_code
+        self.assertEqual(statuscode, 400)
+        self.assertEqual(json_data['status'], 'document')
 
 
 
