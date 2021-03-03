@@ -75,4 +75,4 @@ class Signin(MethodView):
             else:
                 return jsonify({'status': 'ok'}), 200
         except Exception as e:
-            return jsonify({'status': 'exception', 'ex': e}), 403
+            return jsonify({'status': 'exception', 'ex': e}), 400

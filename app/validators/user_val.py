@@ -18,6 +18,8 @@ class RegisterExtra(Schema):
         required=False, validate=validate.Length(min=3, max=30))
     phone_u = fields.String(
         required=False, validate=validate.Length(min=7, max=10))
+    city_u = fields.String(
+        required=False, validate=validate.Length(min=7, max=10))
     regional_u = fields.String(
         required=False, validate=validate.Length(min=3, max=100))
     center_u = fields.String(
