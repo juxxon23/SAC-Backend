@@ -18,8 +18,9 @@ class User(db.Model):
     center_u = db.Column(db.String(100), nullable=False)
     bonding_type = db.Column(db.Integer, db.ForeignKey('Bonding.id_bon'), nullable=False)
 
-    def __init__(self, document_u, email_inst, password_u, name_u, lastname_u, phone_u, city_u, regional_u, center_u, bonding_type):
+    def __init__(self, document_u, id_u, email_inst, password_u, name_u, lastname_u, phone_u, city_u, regional_u, center_u, bonding_type):
         self.document_u = document_u
+        self.id_u = id_u
         self.email_inst = email_inst
         self.password_u = password_u
         self.name_u = name_u
@@ -35,7 +36,7 @@ class Bonding(db.Model):
     __tablename__ = 'Bonding'
 
     id_bon = db.Column(db.Integer, primary_key=True, nullable=False, index=True)
-    description = db.Column(db.String(255))
+    description = db.Column(db.String(30))
     user_bon = db.relationship('User', backref='myBon', lazy='dynamic', foreign_keys='User.bonding_type')
 
     def __init__(self, description):

@@ -3,17 +3,17 @@ from marshmallow import validate
 from flask.views import MethodView
 from flask import jsonify, request
 from app.helpers.encrypt_pass import Crypt
-from app.db.postgresql.model import User, Competencies, Results
+from app.helpers.error_handler import PostgresqlError
 from app.validators.user_val import RegisterUser, RegisterExtra
+from app.db.postgresql.model import User
 from app.db.postgresql.postgresql_manager import PostgresqlManager
-from app.db.postgresql.model import User, Competencies, Results
-
 
 # Se incializan las variables con su respectivo metodo
 encrypt = Crypt()
-user_schema1 = RegisterUser()
-user_schema2 = RegisterExtra()
+user_schema = RegisterUser()
+edit_schema = RegisterExtra()
 postgres_tool = PostgresqlManager()
+pse = PostgresqlError()
 
 
 class Signin(MethodView):
@@ -21,49 +21,58 @@ class Signin(MethodView):
     def post(self):
         try:
             user_signin = request.get_json()
-            errors = user_schema1.validate(user_signin)
+            errors = user_schema.validate(user_signin)
             if errors:
-                return jsonify({'state': 'error', 'error': errors}), 403
-            document_cp = postgres_tool.get_by(User, user_signin['document_u'])
-            if document_cp != None:
-                return jsonify({'state': 'user exists'}), 403
-            new_user = User(
-                document_u=user_signin['document_u'],
-                email_inst=user_signin['email_inst'],
-                password_u=encrypt.hash_string(user_signin['password_u']),
-                name_u='',
-                lastname_u='',
-                phone_u='',
-                city_u='',
-                regional_u='',
-                center_u='',
-                bonding_type=3,
-            )
-            state = postgres_tool.add(new_user)
-            if state == 'ok':
-                return jsonify({'state': 'ok', 'msg': str(state)}), 200
-            elif type(state) == dict:
-                return jsonify({'status': state['error'], 'ex': state['ex']}), 403
+                return jsonify({'status': 'validators', 'error': errors}), 403
+            sac_user = postgres_tool.get_by(User, user_signin['document_u'])
+            msg = pse.msg(sac_user)
+            if msg['status'] == 'user':
+                new_user = User(
+                    document_u=user_signin['document_u'],
+                    id_u='3a4dy8e8',
+                    email_inst=user_signin['email_inst'],
+                    password_u=encrypt.hash_string(user_signin['password_u']),
+                    name_u='',
+                    lastname_u='',
+                    phone_u='',
+                    city_u='',
+                    regional_u='',
+                    center_u='',
+                    bonding_type=3,
+                )
+                state = postgres_tool.add(new_user)
+                msg = pse.msg(state)
+                if msg['status'] == 'ok':
+                    return jsonify({'status': 'ok'}), 200
+                else:
+                    return jsonify(msg), 400
             else:
-                return jsonify({'status': 'unknown'}), 403
+                return jsonify(msg), 400
         except Exception as ex:
-            return jsonify({'state': 'exception', 'ex': str(ex)}), 403
+            return jsonify({'status': 'exception', 'ex': str(ex)}), 403
 
     def put(self):
         try:
-            users_signinExt = request.get_json()
-            errors = user_schema2.validate(users_signinExt)
+            edit_profile = request.get_json()
+            errors = edit_schema.validate(edit_profile)
             if errors:
-                return jsonify({'state': 'error', 'error': errors}), 403
-            document = postgres_tool.get_by(
-                User, users_signinExt['document_u'])
-            document.name_u = users_signinExt['name_u']
-            document.lastname_u = users_signinExt['lastname_u']
-            document.phone_u = users_signinExt['phone_u']
-            document.city_u = users_signinExt['city_u']
-            document.regional_u = users_signinExt['regional_u']
-            document.center_u = users_signinExt['center_u']
+                return jsonify({'status': 'validators', 'error': errors}), 403
+            sac_user = postgres_tool.get_by(
+                User, edit_profile['document_u'])
+            msg = pse.msg(sac_user)
+            if msg != 'ok':
+                return jsonify(msg), 400
+            sac_user.name_u = edit_profile['name_u']
+            sac_user.lastname_u = edit_profile['lastname_u']
+            sac_user.phone_u = edit_profile['phone_u']
+            sac_user.city_u = edit_profile['city_u']
+            sac_user.regional_u = edit_profile['regional_u']
+            sac_user.center_u = edit_profile['center_u']
             state = postgres_tool.update()
-            return jsonify({'state': 'ok', 'msg': state}), 203
+            msg = pse.msg(state)
+            if msg != 'ok':
+                return jsonify(msg), 400
+            else:
+                return jsonify({'status': 'ok'}), 200
         except Exception as e:
             return jsonify({'status': 'exception', 'ex': e}), 403

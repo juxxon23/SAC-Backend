@@ -3,7 +3,7 @@ from flask import jsonify, request
 from marshmallow import validate
 from app.helpers.document_tool import DocumentTool
 from app.db.mongodb.mongodb_manager import MongoDBManager
-from app.validators.document_val import DocumentVal, DocumentUpdate
+from app.validators.document_val import DocumentVal, DocumentUpdate, CollaboratorShare
 from app.db.postgresql.postgresql_manager import PostgresqlManager
 from app.db.postgresql.model import User
 
@@ -12,6 +12,7 @@ doc_schema = DocumentVal()
 doc_up_schema = DocumentUpdate()
 mongo_tool = MongoDBManager()
 postgres_tool = PostgresqlManager()
+share_schema = CollaboratorShare()
 
 class Document(MethodView):
 
