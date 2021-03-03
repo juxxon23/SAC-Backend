@@ -24,8 +24,6 @@ class RegisterExtra(Schema):
         required=False, validate=validate.Length(min=3, max=100))
     center_u = fields.String(
         required=False, validate=validate.Length(min=3, max=100))
-    description_c = fields.List(fields.String(), required=False)
-    description_r = fields.List(fields.String(), required=False)
     bonding_type = fields.Integer(required=False)
 
 
