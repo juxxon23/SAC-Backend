@@ -11,13 +11,15 @@ class RegisterUser(Schema):
 
 
 class RegisterExtra(Schema):
-    document_u = fields.String(required=True)
+    doc_u = fields.String(required=True)
     name_u = fields.String(
         required=False, validate=validate.Length(min=3, max=30))
     lastname_u = fields.String(
         required=False, validate=validate.Length(min=3, max=30))
     phone_u = fields.String(
         required=False, validate=validate.Length(min=7, max=10))
+    city_u = fields.String(
+        required=False, validate=validate.Length(max=30))
     regional_u = fields.String(
         required=False, validate=validate.Length(min=3, max=100))
     center_u = fields.String(

@@ -16,9 +16,8 @@ class DocumentTool():
     # TODO:
     # Cambiar forma de acceder al archivo para evitar el uso de rutas
     # Permitir la creacion dinamica de formatos a partir archivo .docx
-    # Cargar path de la plantilla desde variable de entorno
 
-    # List with document sections - [header, body, footer]
+    # Dict with document sections - {header, body, footer}
     document_content = {}
 
     # path: string - docx path
@@ -191,3 +190,12 @@ class DocumentTool():
                         cont = 6
                 footer_content['list_asis'] = list_user
                 return footer_content
+"""
+
+dt = DocumentTool()
+doc = dt.html_to_string('./2020.html')
+t = open('2020.txt', 'w')
+t.write(doc)
+t.close()
+
+"""
