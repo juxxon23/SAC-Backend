@@ -30,7 +30,7 @@ class Login(MethodView):
             else:
                 if crypt.check_hash(user_login['password_u'], sac_user.password_u):
                     encoded_jwt = jwt.encode({'exp': datetime.datetime.utcnow() + datetime.timedelta(seconds=300), 'udosc': sac_user.document_u}, app.config['SECRET_KEY'], algorithm='HS256')
-                    return jsonify({'status': 'welcome', 'username': sac_user.name_u, 'tkse': encoded_jwt}), 200
+                    return jsonify({'status': 'welcome', 'username': sac_user.document_u, 'tkse': encoded_jwt}), 200
                 else:
                     return jsonify({'status': 'password'}), 400
         except Exception as ex:
