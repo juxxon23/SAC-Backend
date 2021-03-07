@@ -3,7 +3,7 @@ from sqlalchemy.exc import SQLAlchemyError
 
 
 class PostgresqlManager:
-    
+
     def add(self, *args):
         try:
             for new in args:
@@ -54,7 +54,22 @@ class PostgresqlManager:
     # table.query.filter_by(col=data).first()
     def get_by(self, table_name, value):
         try:
-            data = db.session.query(table_name).filter_by(document_u = value).first()
+            data = db.session.query(table_name).filter_by(
+                document_u=value).first()
+            return data
+        except SQLAlchemyError as e:
+            error_msg = {'exception': 'sqlalchemy get_by', 'ex': str(e)}
+            return error_msg
+        except Exception as ex:
+            error_msg = {'exception': 'postgres_tool get_by', 'ex': str(ex)}
+            return error_msg
+
+    def get_by_email(self, table_name, value):
+        try:
+            print('1')
+            data = db.session.query(table_name).filter_by(
+                email_inst=value).first()
+            print('2')
             return data
         except SQLAlchemyError as e:
             error_msg = {'exception': 'sqlalchemy get_by', 'ex': str(e)}

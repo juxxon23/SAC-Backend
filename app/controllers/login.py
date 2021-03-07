@@ -23,7 +23,7 @@ class Login(MethodView):
             errors = user_schema.validate(user_login)
             if errors:
                 return jsonify({'status': 'validators', 'error': errors}), 400
-            sac_user = postgres_tool.get_by(User, user_login['document_u'])
+            sac_user = postgres_tool.get_by_email(User, user_login['email_inst'])
             msg = pse.msg(sac_user)
             if msg['status'] != 'ok':
                 return jsonify(msg), 400
