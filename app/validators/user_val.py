@@ -21,6 +21,9 @@ class RegisterUser(Schema):
 
 
 class RegisterExtra(Schema):
+    password_u = fields.String(
+        required=False, validate=validate.Length(min=8, max=20)
+    )
     document_u = fields.String(required=True)
     name_u = fields.String(
         required=False, validate=validate.Length(min=3, max=30))
