@@ -11,7 +11,6 @@ class Check(MethodView):
             token = header.split(" ")
             try:
                 token_auth = jwt.decode(token[1], app.config['SECRET_KEY'], algorithms=['HS256'])
-                print(token_auth)
                 return jsonify({'state': 'welcome'}), 200
             except:
                 return jsonify({'state': 'token'}), 403
