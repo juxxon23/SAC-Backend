@@ -20,7 +20,6 @@ class Document(MethodView):
     def get(self):
         try:
             id_acta = request.headers.get('id_a')
-            print(id_acta)
             if id_acta == None:
                 docs = mongo_tool.get_all_docs()
                 docs_list = []

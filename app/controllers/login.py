@@ -25,7 +25,7 @@ class Login(MethodView):
                 return jsonify({'status': 'validators', 'error': errors}), 400
             sac_user = postgres_tool.get_by_email(User, user_login['email_inst'])
             msg = pse.msg(sac_user)
-            if msg['status'] != 'ok':
+            if msg.get('status') != 'ok':
                 return jsonify(msg), 400
             else:
                 if crypt.check_hash(user_login['password_u'], sac_user.password_u):

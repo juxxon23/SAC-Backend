@@ -27,7 +27,7 @@ class Signin(MethodView):
                 return jsonify({'status': 'validators', 'error': errors}), 403
             sac_user = postgres_tool.get_by(User, user_signin['document_u'])
             msg = pse.msg(sac_user)
-            if msg['status'] == 'user':
+            if msg.get('status') == 'user':
                 new_user = User(
                     document_u=user_signin['document_u'],
                     id_u=secrets.token_hex(5),
@@ -43,7 +43,7 @@ class Signin(MethodView):
                 )
                 state = postgres_tool.add(new_user)
                 msg = pse.msg(state)
-                if msg['status'] == 'ok':
+                if msg.get('status') == 'ok':
                     return jsonify({'status': 'ok'}), 200
                 else:
                     return jsonify(msg), 400
@@ -61,11 +61,11 @@ class Signin(MethodView):
             sac_user = postgres_tool.get_by(
                 User, edit_profile['document_u'])
             msg = pse.msg(sac_user)
-            if msg['status'] != 'ok':
+            if msg.get('status') != 'ok':
                 return jsonify(msg), 400
             # Asignacion dinamica de forma tal que los campos no ingresados
             # se guarden con una cadena vacia ('')
-            sac_user.password_u = encrypt.hash_string(edit_profile['password_u'])
+            #sac_user.password_u = encrypt.hash_string(edit_profile['password_u'])
             sac_user.name_u = edit_profile['name_u']
             sac_user.lastname_u = edit_profile['lastname_u']
             sac_user.phone_u = edit_profile['phone_u']
@@ -75,7 +75,7 @@ class Signin(MethodView):
             sac_user.bonding_type = edit_profile['bonding_type']
             state = postgres_tool.update()
             msg = pse.msg(state)
-            if msg['status'] != 'ok':
+            if msg.get('status') != 'ok':
                 return jsonify(msg), 400
             else:
                 return jsonify({'status': 'ok'}), 200
