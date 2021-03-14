@@ -177,8 +177,8 @@ class DocumentTool():
                 footer_content[footer_keys[i]] = content[i+3]
             elif footer_colm[5] in footer_col:
                 footer_content[footer_keys[3]] = content[i]
-                footer_content[footer_keys[4]] = content[i+1] + content[i+2]
-                footer_content[footer_keys[5]] = content[i+4]
+                footer_content[footer_keys[4]] = content[i+1]
+                footer_content[footer_keys[5]] = content[i+3]
             elif footer_colm[len(footer_colm)-1] in footer_col:
                 # attendance
                 for m in range(i+1, len(content)):
