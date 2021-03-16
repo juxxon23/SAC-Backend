@@ -17,7 +17,7 @@ class DocumentTool():
     # Cambiar forma de acceder al archivo para evitar el uso de rutas
     # Permitir la creacion dinamica de formatos a partir archivo .docx
 
-    # Dict with document sections - {header, body, footer}
+    # Dict with document sections - {header, body_h, body_t, footer}
     document_content = {}
 
     # path: string - docx path
@@ -73,22 +73,25 @@ class DocumentTool():
         # Split with '\n'
         split_data = data_string.split('\n')
         for i in range(len(split_data)):
-            # Delete spaces at the beginning and end of each string 
+            # Delete spaces at the beginning and end of each string
             split_data[i] = split_data[i].strip()
         return split_data
 
     # content : string - html data
     def get_content_data(self, content):
+        body_h = self.extract_body_html(content)
         text_data = self.html_to_text(content)
         header = self.extract_header_data(text_data)
         body_index = header['len_header']
-        body = self.extract_body_data_v1(text_data[body_index:len(text_data)])
-        footer_index = body_index + body[len(body)-1]
+        body_t = self.extract_body_data_v1(
+            text_data[body_index:len(text_data)])
+        footer_index = body_index + body_t[len(body_t)-1]
         footer = self.extract_footer_data(
             text_data[footer_index:len(text_data)])
         self.document_content = {
             'header': header,
-            'body': body,
+            'body_h': body_h,
+            'body_t': body_t,
             'footer': footer
         }
         return self.document_content
@@ -121,6 +124,15 @@ class DocumentTool():
                     cont += 1
                     header_content[header_keys[i]] = content[k+1]
                     k += 2
+
+
+    def extract_body_html(self, content):
+        body_div = content.split('list-intr')
+        body_div[1] = '<ol class="list-intr' + body_div[1]
+        body = body_div[1].split('end-deact')
+        len_h = len(body[0])-25
+        body_h = body[0][:len_h]
+        return body_h
 
     # content : list - html text
     def extract_body_data_v1(self, content):
