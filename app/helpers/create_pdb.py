@@ -5,7 +5,7 @@ from app.db.postgresql.postgresql_manager import PostgresqlManager
 def create_app():
     postgreql_tool = PostgresqlManager()
     app = Flask(__name__)
-    app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://sac-ddb:pass123@localhost:5432/sac-ddb'
+    app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://postgres:pass123@localhost:5432/sac-ddb'
     with app.app_context():
         db.init_app(app)
         db.create_all()
