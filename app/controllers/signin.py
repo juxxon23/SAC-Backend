@@ -31,9 +31,10 @@ class Signin(MethodView):
             sac_user = postgres_tool.get_by(User, user_signin['document_u'])
             msg = pse.msg(sac_user)
             if msg.get('status') == 'user':
+                id_uval = secrets.token_hex(5)
                 new_user = User(
                     document_u=user_signin['document_u'],
-                    id_u=secrets.token_hex(5),
+                    id_u= id_uval,
                     email_inst=user_signin['email_inst'],
                     password_u=encrypt.hash_string(user_signin['password_u']),
                     name_u='',
@@ -47,9 +48,8 @@ class Signin(MethodView):
                 state = postgres_tool.add(new_user)
                 msg = pse.msg(state)
                 if msg.get('status') == 'ok':
-                    print(new_user.id_u)
                     fsm.users_folder(new_user.id_u)
-                    return jsonify({'status': 'ok'}), 200
+                    return jsonify({'status': 'ok', 'id_u': id_uval}), 200
                 else:
                     return jsonify(msg), 400
             else:
@@ -60,56 +60,62 @@ class Signin(MethodView):
     def put(self):
         try:
             edit_profile = request.get_json()
-            if list(edit_profile.keys())[list(edit_profile.values()).index(edit_profile['password_u'])]:
-                for i in edit_profile:
-                    tamaño = len(edit_profile[i])
-                    if tamaño == 0 and int(len(edit_profile['password_u']) < 0):
-                        sac_user = postgres_tool.get_by(
-                            User, edit_profile['document_u'])
-                        msg = pse.msg(sac_user)
-                        if msg.get('status') != 'ok':
-                            return jsonify(msg), 400
-                        sac_user.name_u = edit_profile['name_u']
-                        sac_user.lastname_u = edit_profile['lastname_u']
-                        sac_user.phone_u = edit_profile['phone_u']
-                        sac_user.city_u = edit_profile['city_u']
-                        sac_user.regional_u = edit_profile['regional_u']
-                        sac_user.center_u = edit_profile['center_u']
-                        sac_user.bonding_type = 3
-                        state = postgres_tool.update()
-                        msg = pse.msg(state)
-                        if msg.get('status') != 'ok':
-                            return jsonify(msg), 400
-                        else:
-                            return jsonify({'status': 'ok'}), 200
-                errors = edit_schema.validate(edit_profile)
-                if errors:
-                    return jsonify({'status': 'validators', 'error': errors}), 403
-                sac_user = postgres_tool.get_by(
-                    User, edit_profile['document_u'])
-                msg = pse.msg(sac_user)
-                if msg.get('status') != 'ok':
-                    return jsonify(msg), 400
-                sac_user.password_u = encrypt.hash_string(edit_profile['password_u'])
-                sac_user.name_u = edit_profile['name_u']
-                sac_user.lastname_u = edit_profile['lastname_u']
-                sac_user.phone_u = edit_profile['phone_u']
-                sac_user.city_u = edit_profile['city_u']
-                sac_user.regional_u = edit_profile['regional_u']
-                sac_user.center_u = edit_profile['center_u']
-                sac_user.bonding_type = edit_profile['bonding_type']
-                state = postgres_tool.update()
-                msg = pse.msg(state)
-                if msg.get('status') != 'ok':
-                    return jsonify(msg), 400
-                else:
-                    return jsonify({'status': 'ok'}), 200
+            print(edit_profile)
+            if edit_profile.get('password_u') != None:
+                if list(edit_profile.keys())[list(edit_profile.values()).index(edit_profile['password_u'])]:
+                    for i in edit_profile:
+                        tamaño = len(edit_profile[i])
+                        if tamaño == 0 or int(len(edit_profile['password_u']) < 0):
+                            sac_user = postgres_tool.get_by_id(
+                                User, edit_profile['id_u'])
+                            msg = pse.msg(sac_user)
+                            if msg.get('status') != 'ok':
+                                return jsonify(msg), 400
+                            sac_user.name_u = edit_profile['name_u']
+                            sac_user.lastname_u = edit_profile['lastname_u']
+                            sac_user.phone_u = edit_profile['phone_u']
+                            sac_user.city_u = edit_profile['city_u']
+                            sac_user.regional_u = edit_profile['regional_u']
+                            sac_user.center_u = edit_profile['center_u']
+                            if edit_profile.get('bonding_type') == "":
+                                sac_user.bonding_type = 3
+                            else:
+                                sac_user.bonding_type = edit_profile['bonding_type']
+                            state = postgres_tool.update()
+                            msg = pse.msg(state)
+                            if msg.get('status') != 'ok':
+                                return jsonify(msg), 400
+                            else:
+                                return jsonify({'status': 'ok'}), 200
+                    errors = edit_schema.validate(edit_profile)
+                    if errors:
+                        return jsonify({'status': 'validators', 'error': errors}), 403
+                    sac_user = postgres_tool.get_by_id(
+                        User, edit_profile['id_u'])
+                    msg = pse.msg(sac_user)
+                    if msg.get('status') != 'ok':
+                        return jsonify(msg), 400
+                    sac_user.password_u = encrypt.hash_string(
+                        edit_profile['password_u'])
+                    sac_user.name_u = edit_profile['name_u']
+                    sac_user.lastname_u = edit_profile['lastname_u']
+                    sac_user.phone_u = edit_profile['phone_u']
+                    sac_user.city_u = edit_profile['city_u']
+                    sac_user.regional_u = edit_profile['regional_u']
+                    sac_user.center_u = edit_profile['center_u']
+                    sac_user.bonding_type = edit_profile['bonding_type']
+                    state = postgres_tool.update()
+                    msg = pse.msg(state)
+                    if msg.get('status') != 'ok':
+                        return jsonify(msg), 400
+                    else:
+                        return jsonify({'status': 'ok'}), 200
             else:
                 for i in edit_profile:
                     tamaño = len(edit_profile[i])
                     if tamaño == 0:
-                        sac_user = postgres_tool.get_by(
-                            User, edit_profile['document_u'])
+                        sac_user = postgres_tool.get_by_id(
+                            User, edit_profile['id_u'])
                         msg = pse.msg(sac_user)
                         if msg.get('status') != 'ok':
                             return jsonify(msg), 400
@@ -119,7 +125,10 @@ class Signin(MethodView):
                         sac_user.city_u = edit_profile['city_u']
                         sac_user.regional_u = edit_profile['regional_u']
                         sac_user.center_u = edit_profile['center_u']
-                        sac_user.bonding_type = 3
+                        if edit_profile.get('bonding_type') == "":
+                            sac_user.bonding_type = 3
+                        else:
+                            sac_user.bonding_type = edit_profile['bonding_type']
                         state = postgres_tool.update()
                         msg = pse.msg(state)
                         if msg.get('status') != 'ok':
@@ -129,8 +138,8 @@ class Signin(MethodView):
                 errors = edit_schema.validate(edit_profile)
                 if errors:
                     return jsonify({'status': 'validators', 'error': errors}), 403
-                sac_user = postgres_tool.get_by(
-                    User, edit_profile['document_u'])
+                sac_user = postgres_tool.get_by_id(
+                    User, edit_profile['id_u'])
                 msg = pse.msg(sac_user)
                 if msg.get('status') != 'ok':
                     return jsonify(msg), 400
