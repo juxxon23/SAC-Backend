@@ -21,6 +21,7 @@ def add_routes(app, user, document, utils):
 
     # Document routes
     app.add_url_rule(document['document'], view_func=document['view_func_document'])
+    app.add_url_rule(document['search'], view_func=document['view_func_search'])
 
     # Utilities routes
     app.add_url_rule(utils['ch'], view_func=utils['view_func_ch'])

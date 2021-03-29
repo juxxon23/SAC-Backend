@@ -66,10 +66,32 @@ class PostgresqlManager:
 
     def get_by_email(self, table_name, value):
         try:
-            print('1')
             data = db.session.query(table_name).filter_by(
                 email_inst=value).first()
-            print('2')
+            return data
+        except SQLAlchemyError as e:
+            error_msg = {'exception': 'sqlalchemy get_by', 'ex': str(e)}
+            return error_msg
+        except Exception as ex:
+            error_msg = {'exception': 'postgres_tool get_by', 'ex': str(ex)}
+            return error_msg
+
+    def get_by_id(self, table_name, value):
+        try:
+            data = db.session.query(table_name).filter_by(
+                id_u=value).first()
+            return data
+        except SQLAlchemyError as e:
+            error_msg = {'exception': 'sqlalchemy get_by', 'ex': str(e)}
+            return error_msg
+        except Exception as ex:
+            error_msg = {'exception': 'postgres_tool get_by', 'ex': str(ex)}
+            return error_msg
+
+    def get_num_act(self, table_name, value):
+        try:
+            data = db.session.query(table_name).filter_by(
+                code_value=value).first()
             return data
         except SQLAlchemyError as e:
             error_msg = {'exception': 'sqlalchemy get_by', 'ex': str(e)}

@@ -2,6 +2,7 @@ from .controllers.login import Login
 from .controllers.signin import Signin
 from .controllers.document import Document
 from .controllers.check import Check
+from .controllers.search import Search
 
 user = {
     "signin": "/signin", "view_func_signin": Signin.as_view("app_signin"),
@@ -9,7 +10,8 @@ user = {
 }
 
 document = {
-    "document": "/document", "view_func_document": Document.as_view("app_document")
+    "document": "/document", "view_func_document": Document.as_view("app_document"),
+    "search": "/search", "view_func_search": Search.as_view("app_search")
 }
 
 utils = {

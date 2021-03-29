@@ -52,3 +52,15 @@ class Paths(db.Model):
     def __init__(self, id_path, path):
         self.path = id_path
         self.path = path
+        
+class InfoStats(db.Model):
+    __tablename__ = 'InfoStats'
+    
+    code_value = db.Column(db.String(30), primary_key=True, nullable=False)
+    value_info = db.Column(db.Integer)
+    description = db.Column(db.String(255), nullable=False)
+    
+    def __init__(self, code_value, value_info, description):
+        self.code_value = code_value
+        self.value_info = value_info
+        self.description = description

@@ -15,7 +15,6 @@ class DocumentTool():
 
     # TODO:
     # Cambiar forma de acceder al archivo para evitar el uso de rutas
-    # Permitir la creacion dinamica de formatos a partir archivo .docx
 
     # Dict with document sections - {header, body_h, body_t, footer}
     document_content = {}
@@ -61,13 +60,20 @@ class DocumentTool():
 
     # opt : string - template option
     def template_selector(self, opt):
-        if opt == 2:
-            template = 'app/data/document/template/string/2021.txt'
-            return template
-        else:
+        template = ''
+        if opt == 1:
             template = 'app/data/document/template/string/2020.txt'
-            return template
-
+        elif opt == 2:
+            template = 'app/data/document/template/string/2021.txt'
+        template = self.read_html(template)
+        return template
+    
+    def template_code(self, opt):
+        if opt == 2:
+            return 'GD-F-007 V03'
+        else:
+            return 'GD-F-007 V02'
+            
     # data_string : string - data
     def del_space(self, data_string):
         # Split with '\n'
@@ -125,7 +131,6 @@ class DocumentTool():
                     header_content[header_keys[i]] = content[k+1]
                     k += 2
 
-
     def extract_body_html(self, content):
         body_div = content.split('list-intr')
         body_div[1] = '<ol class="list-intr' + body_div[1]
@@ -180,7 +185,7 @@ class DocumentTool():
         cont = 6
         for i in range(len(content)):
             footer_col = unidecode(content[i].lower())
-            # data before attendance 
+            # data before attendance
             if footer_colm[1] in footer_col:
                 footer_content[footer_keys[i]] = content[i+3]
             elif footer_colm[2] in footer_col:
@@ -202,12 +207,11 @@ class DocumentTool():
                         cont = 6
                 footer_content['list_asis'] = list_user
                 return footer_content
-"""
 
-dt = DocumentTool()
-doc = dt.html_to_string('./2020.html')
-t = open('2020.txt', 'w')
-t.write(doc)
-t.close()
 
-"""
+#dt = DocumentTool()
+#docHtml = dt.html_to_string('2021.html')
+#doc = dt.html_to_string('./2020.html')
+#t = open('2021.txt', 'w')
+# t.write(docHtml)
+# t.close()
