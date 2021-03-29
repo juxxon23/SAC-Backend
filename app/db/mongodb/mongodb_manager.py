@@ -3,8 +3,10 @@ from bson.objectid import ObjectId
 from bson.json_util import dumps
 from flask import current_app as app
 
-client = pymongo.MongoClient(app.config['MONGO_URI'], ssl=True, ssl_cert_reqs='CERT_NONE')
+client = pymongo.MongoClient(
+    app.config['MONGO_URI'], ssl=True, ssl_cert_reqs='CERT_NONE')
 mongo = client.get_database("sac-ddb")
+
 
 class MongoDBManager():
 
@@ -24,11 +26,12 @@ class MongoDBManager():
             error_msg = {'error': 'mongodb_tool delete_doc', 'ex': str(ex)}
             return error_msg
 
-    def update_doc(self, id_acta, doc, cont):
+    def update_doc(self, id_a, cont):
         try:
+            act = self.get_by_num(int(id_a))
             up_doc = mongo.documents.update_one(
-                {'_id':  ObjectId(id_acta)},
-                {'$set': {'document_u': doc, 'content': cont}}
+                {'_id':  ObjectId(act['_id'])},
+                {'$set': {'content': cont}}
             )
             return 'ok'
         except Exception as ex:
@@ -38,7 +41,7 @@ class MongoDBManager():
     def get_all_docs(self):
         try:
             docs = mongo.documents.find()
-            #docs_d = dumps(docs)
+            # docs_d = dumps(docs)
             return docs
         except Exception as ex:
             error_msg = {'error': 'mongodb_tool get_all_docs', 'ex': str(ex)}
@@ -51,3 +54,20 @@ class MongoDBManager():
         except Exception as ex:
             error_msg = {'error': 'mongodb_tool get_by_id', 'ex': str(ex)}
             return error_msg
+
+    def get_by_num(self, num_acta):
+        try:
+            doc = mongo.documents.find_one({'id_a': int(num_acta)})
+            return doc
+        except Exception as ex:
+            error_msg = {'error': 'mongodb_tool get_by_id', 'ex': str(ex)}
+            return error_msg
+
+    def get_by_idu(self, doc_user):
+        try:
+            doc = mongo.documents.find_one({'id_u': doc_user})
+            return doc
+        except Exception as ex:
+            error_msg = {'error': 'mongodb_tool get_by_id', 'ex': str(ex)}
+            return error_msg
+
