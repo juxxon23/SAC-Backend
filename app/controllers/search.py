@@ -35,7 +35,6 @@ class Search(MethodView):
     def post(self):
         try:
             data = request.get_json()
-            print(data)
             # Falta validacion
             opt = data['opt']
             data_opt = data['dataOpt']

@@ -49,21 +49,15 @@ class Document(MethodView):
             else:
                 msg = postgres_tool.update()
                 user_cred = postgres_tool.get_by_id(User, data['id_u'])
-                if user_cred == None or type(user_cred) == dict:
-                    user_cred = 'no-data'
-                u = {
-                    'document': user_cred.document_u,
-                    'email': user_cred.email_inst,
-                    'name': user_cred.name_u,
-                    'lastname': user_cred.lastname_u,
-                    'phone': user_cred.phone_u,
-                    'city': user_cred.city_u,
-                    'regional': user_cred.regional_u,
-                    'center': user_cred.center_u,
-                    'bonding': user_cred.bonding_type
-                }
+                msg = pse.msg(user_cred)
+                answ = {}
+                answ['id_acta'] = data['id_a']
+                if msg.get('status') == 'ok':
+                    content = doc_tool.set_content_data(data['id_a'], data['format_id'], user_cred)
+                    if content != None:
+                        answ['content'] = content
                 template = doc_tool.template_selector(data['format_id'])
-                answ = {'id_acta': data['id_a'], 'us': u, 'template': template}
+                answ['template'] = template
                 return jsonify({"format": answ, "status": "ok"}), 200
         except Exception as ex:
             return jsonify({"status": "exception", "ex": str(ex)}), 400
@@ -80,5 +74,6 @@ class Document(MethodView):
                 return jsonify({"status": "ok"}), 200
             else:
                 return jsonify({"status": "update error", "ex": msg}), 400
+            return jsonify({'status': 'ok'}), 200
         except Exception as ex:
             return jsonify({"status": "exception", "ex": str(ex)}), 400
