@@ -22,11 +22,12 @@ class Search(MethodView):
             id_acta = request.headers.get('id_a')
             id_u = request.headers.get('id_u')
             doc_user = mongo_tool.get_by_num(id_acta)
-            if doc_user['id_u'] == id_u:
+            if doc_user['id_u'] == id_u or id_u in doc_user['opts'][0]:
                 template = doc_tool.template_selector(
                     doc_user['format_id'])
                 u = doc_user['content']
-                return jsonify({'u': u, 'template': template}), 200
+                html_template = doc_user['html_content']
+                return jsonify({'u': u, 'template': template, 'h_temp': html_template}), 200
             else:
                 return jsonify({'msg': 'El usuario no tiene permisos de edicion sobre el acta'}), 400
         except Exception as ex:
@@ -38,11 +39,16 @@ class Search(MethodView):
             # Falta validacion
             opt = data['opt']
             data_opt = data['dataOpt']
+            curr_u = data['currUser']
             if opt == "0":
                 doc_user = mongo_tool.get_by_num(data_opt)
                 if doc_user == None:
                     return jsonify({'status': 'error', 'error': 'not found'}), 400
-                content = schr.get_data_option(doc_user)
+                document = postgres_tool.get_by_id(User, doc_user['id_u'])
+                msg = pse.msg(document)
+                if msg.get('status') != 'ok':
+                    return jsonify(msg), 400
+                content = schr.get_data_option(doc_user, document.document_u, curr_user=curr_u)
                 return jsonify({'u': content['u'], 'template': content['template']}), 200
             elif opt == "1":
                 doc_u = postgres_tool.get_by(User, data_opt)
@@ -50,10 +56,12 @@ class Search(MethodView):
                 if msg.get('status') != 'ok':
                     return jsonify(msg), 400
                 doc_user = mongo_tool.get_all_docs()
-                content = schr.get_all_list(doc_user, opt='check_id', id_u=doc_u.id_u)
+                content = schr.get_all_list(doc_user, opt='check_id', user_pos=doc_u, curr_user=curr_u)
                 return jsonify({'u': content}), 200
             elif opt == "2":
-                return jsonify({'status': 'Not ready', 'u': []}), 200
+                doc_user = mongo_tool.get_all_docs()
+                content = schr.get_all_list(doc_user, opt='description', curr_user=curr_u, descript=data_opt)
+                return jsonify({'u': content}), 200
             else:
                 return jsonify({'status': 'error', 'error': 'invalid option'}), 400
         except Exception as ex:

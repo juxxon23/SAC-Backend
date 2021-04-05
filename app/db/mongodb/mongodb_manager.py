@@ -26,12 +26,24 @@ class MongoDBManager():
             error_msg = {'error': 'mongodb_tool delete_doc', 'ex': str(ex)}
             return error_msg
 
-    def update_doc(self, id_a, cont):
+    def update_doc(self, id_a, cont, html_content):
         try:
             act = self.get_by_num(int(id_a))
             up_doc = mongo.documents.update_one(
                 {'_id':  ObjectId(act['_id'])},
-                {'$set': {'content': cont}}
+                {'$set': {'content': cont, 'html_content': html_content}}
+            )
+            return 'ok'
+        except Exception as ex:
+            error_msg = {'error': 'mongodb_tool update_doc', 'ex': str(ex)}
+            return error_msg
+        
+    def update_coll(self, id_a, opts):
+        try:
+            act = self.get_by_num(int(id_a))
+            up_doc = mongo.documents.update_one(
+                {'_id':  ObjectId(act['_id'])},
+                {'$set': {'opts': opts}}
             )
             return 'ok'
         except Exception as ex:

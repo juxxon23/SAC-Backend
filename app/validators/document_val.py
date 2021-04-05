@@ -11,5 +11,6 @@ class CollaboratorShare(Schema):
  
 class DocumentUpdate(Schema):
     id_a = fields.String(required=True)
+    html_content = fields.String(required=True)
     content = fields.Raw(required=True)
     

@@ -25,3 +25,4 @@ def add_routes(app, user, document, utils):
 
     # Utilities routes
     app.add_url_rule(utils['ch'], view_func=utils['view_func_ch'])
+    app.add_url_rule(utils['re'], view_func=utils['view_func_re'])

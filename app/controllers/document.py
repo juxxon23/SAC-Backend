@@ -29,7 +29,7 @@ class Document(MethodView):
             if msg.get('status') != 'ok':
                 return jsonify(msg), 400
             docs = mongo_tool.get_all_docs()
-            docs_list = schr.get_all_list(docs, opt='check_id', id_u=doc_u)
+            docs_list = schr.get_all_list(docs, opt='check_id', user_pos=doc_u)
             return jsonify({'docs': docs_list}), 200
         except Exception as ex:
             return jsonify({'status': 'exception', 'ex': str(ex)}), 400
@@ -39,10 +39,11 @@ class Document(MethodView):
             data = request.get_json()
             errors = doc_schema.validate(data)
             if errors:
-                return jsonify({'status': 'error', 'errors': errors}), 400
+                return jsonify({'status': 'validators', 'errors': errors}), 400
             curr_a = postgres_tool.get_num_act(InfoStats, 'curr_act')
             curr_a.value_info += 1
             data['id_a'] = curr_a.value_info
+            data['opts'] = [[],[]]
             msg = mongo_tool.add_doc(data)
             if msg == 'error':
                 return jsonify({"status": "add error"}), 400
@@ -69,7 +70,7 @@ class Document(MethodView):
             if errors:
                 return jsonify({'status': 'validation_error', 'errors': errors}), 400
             msg = mongo_tool.update_doc(
-                data['id_a'], data['content'])
+                data['id_a'], data['content'], data['html_content'])
             if msg == 'ok':
                 return jsonify({"status": "ok"}), 200
             else:
