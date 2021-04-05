@@ -50,7 +50,7 @@ class Signin(MethodView):
                 msg = pse.msg(state)
                 if msg.get('status') == 'ok':
                     fsm.users_folder(new_user.id_u)
-                    return jsonify({'status': 'ok'}), 200
+                    return jsonify({'status': 'ok', 'id_u': str(new_user.id_u)}), 200
                 else:
                     return jsonify(msg), 400
             else:
