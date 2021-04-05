@@ -8,6 +8,7 @@ from app.validators.document_val import DocumentVal, DocumentUpdate, Collaborato
 from app.db.postgresql.postgresql_manager import PostgresqlManager
 from app.db.postgresql.model import User, InfoStats
 from app.helpers.error_handler import PostgresqlError
+from app.helpers.create_user_folder import FileSystemManager
 
 doc_tool = DocumentTool()
 doc_schema = DocumentVal()
@@ -17,6 +18,7 @@ postgres_tool = PostgresqlManager()
 share_schema = CollaboratorShare()
 schr = SearchTool()
 pse = PostgresqlError()
+fms = FileSystemManager()
 
 
 class Document(MethodView):
@@ -59,6 +61,8 @@ class Document(MethodView):
                         answ['content'] = content
                 template = doc_tool.template_selector(data['format_id'])
                 answ['template'] = template
+                answ = {'id_acta': data['id_a'], 'us': u, 'template': template}
+                fms.actas_folder(data['id_a'],data['id_u'])
                 return jsonify({"format": answ, "status": "ok"}), 200
         except Exception as ex:
             return jsonify({"status": "exception", "ex": str(ex)}), 400
