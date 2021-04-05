@@ -61,8 +61,7 @@ class Document(MethodView):
                         answ['content'] = content
                 template = doc_tool.template_selector(data['format_id'])
                 answ['template'] = template
-                answ = {'id_acta': data['id_a'], 'us': u, 'template': template}
-                fms.actas_folder(data['id_a'],data['id_u'])
+                fms.actas_folder(data['id_a'], data['id_u'])
                 return jsonify({"format": answ, "status": "ok"}), 200
         except Exception as ex:
             return jsonify({"status": "exception", "ex": str(ex)}), 400

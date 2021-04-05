@@ -1,4 +1,3 @@
-# Se importan las librerias y clases respectivas para hacer el signin
 from marshmallow import validate
 from flask.views import MethodView
 from flask import jsonify, request
@@ -11,7 +10,8 @@ import secrets
 import os
 from app.helpers.create_user_folder import FileSystemManager
 from app.helpers.editprofile_myprofile import EdipMiProfile, MyPerfile
-# Se incializan las variables con su respectivo metodo
+
+
 encrypt = Crypt()
 user_schema = RegisterUser()
 edit_schema = RegisterExtra()
@@ -20,6 +20,8 @@ pse = PostgresqlError()
 fsm = FileSystemManager()
 emp1 = EdipMiProfile()
 emp2 = MyPerfile()
+
+
 class Signin(MethodView):
 
     def post(self):
@@ -47,7 +49,6 @@ class Signin(MethodView):
                 state = postgres_tool.add(new_user)
                 msg = pse.msg(state)
                 if msg.get('status') == 'ok':
-                    print(new_user.id_u)
                     fsm.users_folder(new_user.id_u)
                     return jsonify({'status': 'ok'}), 200
                 else:
@@ -60,7 +61,6 @@ class Signin(MethodView):
     def put(self):
         try:
             perfile = request.get_json()
-            print(perfile)
             if perfile.get('password_u') != None:
                 if list(perfile.keys())[list(perfile.values()).index(perfile['password_u'])]:
                     for i in perfile:
