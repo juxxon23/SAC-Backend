@@ -99,3 +99,15 @@ class PostgresqlManager:
         except Exception as ex:
             error_msg = {'exception': 'postgres_tool get_by', 'ex': str(ex)}
             return error_msg
+
+    def get_data_user(self, table_name, value):
+        try:
+            for data in db.session.query(table_name).filter(table_name.id_u == value):
+                values_user = data.name_u, data.lastname_u, data.phone_u, data.bonding_type, data.regional_u, data.center_u, data.city_u
+            return data, values_user
+        except SQLAlchemyError as e:
+            error_msg = {'exception': 'sqlalchemy get_by', 'ex': str(e)}
+            return error_msg
+        except Exception as ex:
+            error_msg = {'exception': 'postgres_tool get_by', 'ex': str(ex)}
+            return error_msg

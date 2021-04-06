@@ -11,6 +11,7 @@ import secrets
 import os
 from app.helpers.create_user_folder import FileSystemManager
 from app.helpers.editprofile_myprofile import EdipMiProfile, MyPerfile
+from app.helpers.email_confimation import EmailConfirmation
 # Se incializan las variables con su respectivo metodo
 encrypt = Crypt()
 user_schema = RegisterUser()
@@ -20,6 +21,8 @@ pse = PostgresqlError()
 fsm = FileSystemManager()
 emp1 = EdipMiProfile()
 emp2 = MyPerfile()
+sends_emails = EmailConfirmation()
+
 class Signin(MethodView):
 
     def post(self):
@@ -47,7 +50,7 @@ class Signin(MethodView):
                 state = postgres_tool.add(new_user)
                 msg = pse.msg(state)
                 if msg.get('status') == 'ok':
-                    print(new_user.id_u)
+                    sends_emails.send_email(new_user.email_inst)
                     fsm.users_folder(new_user.id_u)
                     return jsonify({'status': 'ok'}), 200
                 else:
@@ -60,7 +63,6 @@ class Signin(MethodView):
     def put(self):
         try:
             perfile = request.get_json()
-            print(perfile)
             if perfile.get('password_u') != None:
                 if list(perfile.keys())[list(perfile.values()).index(perfile['password_u'])]:
                     for i in perfile:
@@ -130,3 +132,16 @@ class Signin(MethodView):
                     return jsonify({'status': 'ok'}), 200
         except Exception as e:
             return jsonify({'status': 'exception', 'ex': e}), 400
+
+    def get(self):
+        try:
+            id_u = request.headers.get('id_u')
+            data_user = postgres_tool.get_data_user(User, id_u)
+            msg = pse.msg(data_user)
+            if msg.get('status') != 'ok':
+                return jsonify(msg), 400
+            for i in data_user:
+                lista=i.name_u, i.lastname_u, i.phone_u, i.bonding_type, i.regional_u, i.center_u, i.city_u
+                return jsonify({'data': lista}), 200
+        except Exception as ex:
+            return jsonify({'status': 'exception', 'ex': str(ex)}), 400

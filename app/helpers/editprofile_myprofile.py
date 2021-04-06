@@ -11,6 +11,7 @@ class EdipMiProfile():
         sac_user.city_u = perfile['city_u']
         sac_user.regional_u = perfile['regional_u']
         sac_user.center_u = perfile['center_u']
+        sac_user.email_inst = perfile['email_inst']
         if perfile.get('bonding_type') == "":
             sac_user.bonding_type = 3
         else:
@@ -23,6 +24,7 @@ class EdipMiProfile():
         sac_user.city_u = perfile['city_u']
         sac_user.regional_u = perfile['regional_u']
         sac_user.center_u = perfile['center_u']
+        sac_user.email_inst = perfile['email_inst']
         sac_user.bonding_type = 3
 
 
