@@ -64,3 +64,16 @@ class InfoStats(db.Model):
         self.code_value = code_value
         self.value_info = value_info
         self.description = description
+        
+class RequestEdit(db.Model):
+    __tablename__ = 'RequestEdit'
+    
+    id_req = db.Column(db.Integer, primary_key=True, nullable=False, index=True)
+    creator = db.Column(db.String(20), nullable=False)
+    id_a = db.Column(db.Integer)
+    id_u = db.Column(db.String(10), nullable=False)
+    
+    def __init__(self, creator, id_a, id_u):
+        self.creator = creator
+        self.id_a = id_a
+        self.id_u = id_u
