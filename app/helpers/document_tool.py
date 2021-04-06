@@ -1,20 +1,14 @@
 import os
-from datetime import date, time
+import datetime
 from unidecode import unidecode
 from pydocx import PyDocX
 from app.helpers.html2text import html2text
 from app.data.document.template.keys.k2020 import header_keys, body_keys, footer_keys
 from app.data.document.template.keys.k2020 import headers_colm, body_colm, footer_colm
+from app.data.document.template.model.m2021 import content_21
 
 
 class DocumentTool():
-
-    """DocumentTool: Manipulacion de documentos 'Actas de compromiso'."""
-    __author__ = "Grimpoteuthis (jphenao979@misena.edu.co)"
-    __contributors__ = ["Nelson Andres Tique", "natique03@misena.edu.co"]
-
-    # TODO:
-    # Cambiar forma de acceder al archivo para evitar el uso de rutas
 
     # Dict with document sections - {header, body_h, body_t, footer}
     document_content = {}
@@ -67,13 +61,13 @@ class DocumentTool():
             template = 'app/data/document/template/string/2021.txt'
         template = self.read_html(template)
         return template
-    
+
     def template_code(self, opt):
         if opt == 2:
             return 'GD-F-007 V03'
         else:
             return 'GD-F-007 V02'
-            
+
     # data_string : string - data
     def del_space(self, data_string):
         # Split with '\n'
@@ -83,6 +77,41 @@ class DocumentTool():
             split_data[i] = split_data[i].strip()
         return split_data
 
+    def set_content_data(self, id_a, format_id, user_sac):
+        try:
+            if format_id == 2:
+                content_21[0][0] = "ACTA No. {}".format(id_a)
+                created_date = datetime.datetime.utcnow()
+                la = 2
+                if user_sac.city_u != "":
+                    content_21[0][2][0][la] = "{}, {:%d de %B de %Y}".format(user_sac.city_u, created_date)
+                else:
+                    content_21[0][2][0][la] = "Armenia, {:%d de %B de %Y}".format(created_date)
+                content_21[0][2][1][la] = "{:%I:%M %p}".format(created_date)
+                content_21[1][0] = "REGISTRO DE ASISTENCIA Y APROBACIÓN DEL ACTA No- {} DEL DÍA {:%d DEL MES DE %B DEL AÑO %Y}".format(
+                    id_a, created_date).upper()
+                content_21[1][3] = [
+                    "1",
+                    "",
+                    user_sac.name_u + " " + user_sac.lastname_u,
+                    user_sac.document_u,
+                    "",
+                    "",
+                    "",
+                    "Centro de Comercio y Turismo",
+                    user_sac.email_inst,
+                    user_sac.phone_u,
+                    "",
+                    ""]
+                if user_sac.bonding_type == 1:
+                    content_21[1][3][4] = "X"
+                elif user_sac.bonding_type == 2:
+                    content_21[1][3][5] = "X"
+                return content_21
+        except Exception:
+            return None
+        
+        
     # content : string - html data
     def get_content_data(self, content):
         body_h = self.extract_body_html(content)

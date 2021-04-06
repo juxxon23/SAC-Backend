@@ -1,4 +1,3 @@
-# Se importan las librerias y clases respectivas para hacer el signin
 from marshmallow import validate
 from flask.views import MethodView
 from flask import jsonify, request
@@ -11,8 +10,13 @@ import secrets
 import os
 from app.helpers.create_user_folder import FileSystemManager
 from app.helpers.editprofile_myprofile import EdipMiProfile, MyPerfile
+<<<<<<< HEAD
 from app.helpers.email_confimation import EmailConfirmation
 # Se incializan las variables con su respectivo metodo
+=======
+
+
+>>>>>>> 44fa65561d129149969d77a951a73d48327b0671
 encrypt = Crypt()
 user_schema = RegisterUser()
 edit_schema = RegisterExtra()
@@ -21,7 +25,11 @@ pse = PostgresqlError()
 fsm = FileSystemManager()
 emp1 = EdipMiProfile()
 emp2 = MyPerfile()
+<<<<<<< HEAD
 sends_emails = EmailConfirmation()
+=======
+
+>>>>>>> 44fa65561d129149969d77a951a73d48327b0671
 
 class Signin(MethodView):
 
@@ -52,7 +60,7 @@ class Signin(MethodView):
                 if msg.get('status') == 'ok':
                     sends_emails.send_email(new_user.email_inst)
                     fsm.users_folder(new_user.id_u)
-                    return jsonify({'status': 'ok'}), 200
+                    return jsonify({'status': 'ok', 'id_u': str(new_user.id_u)}), 200
                 else:
                     return jsonify(msg), 400
             else:

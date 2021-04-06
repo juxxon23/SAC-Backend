@@ -3,6 +3,7 @@ from .controllers.signin import Signin
 from .controllers.document import Document
 from .controllers.check import Check
 from .controllers.search import Search
+from .controllers.req_edit import ReqEdit
 
 user = {
     "signin": "/signin", "view_func_signin": Signin.as_view("app_signin"),
@@ -15,5 +16,6 @@ document = {
 }
 
 utils = {
-    "ch": "/ch", "view_func_ch": Check.as_view("app_check")
+    "ch": "/ch", "view_func_ch": Check.as_view("app_check"),
+    "re": "/re", "view_func_re": ReqEdit.as_view("app_reqedit")
 }
