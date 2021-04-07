@@ -1,3 +1,5 @@
+from os import scandir, getcwd
+from os.path import abspath
 import os
 
 class FileSystemManager():
@@ -11,3 +13,6 @@ class FileSystemManager():
         path_acta = "app/data/users/{}/{}".format(id_u, id_a)
         os.makedirs(path_acta)
 
+
+    def ls(self, ruta):
+        return [abspath(arch.path) for arch in scandir(ruta) if arch.is_file()]
