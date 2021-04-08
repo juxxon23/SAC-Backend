@@ -1,20 +1,26 @@
-import os
-import datetime
 from unidecode import unidecode
 from pydocx import PyDocX
 from app.helpers.html2text import html2text
 from app.data.document.template.keys.k2020 import header_keys, body_keys, footer_keys
 from app.data.document.template.keys.k2020 import headers_colm, body_colm, footer_colm
 from app.data.document.template.model.m2021 import content_21
+from pytz import timezone
+import os
+import datetime
 
 
 class DocumentTool():
 
     # Dict with document sections - {header, body_h, body_t, footer}
     document_content = {}
+    english_months = ['january', 'february', 'march', 'april', 'may', 'june',
+        'july', 'august', 'september', 'october', 'november', 'december']
+    spanish_months = ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio',
+        'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre']
 
     # path: string - docx path
     # outname: string - filename
+
     def docx_to_html(self, path, outname):
         with open(outname, "w") as file_html:
             html = PyDocX.to_html(path)
@@ -81,15 +87,20 @@ class DocumentTool():
         try:
             if format_id == 2:
                 content_21[0][0] = "ACTA No. {}".format(id_a)
-                created_date = datetime.datetime.utcnow()
+                cre_date = datetime.datetime.utcnow()
+                created_date = cre_date.astimezone(timezone('America/Bogota'))
                 la = 2
                 if user_sac.city_u != "":
-                    content_21[0][2][0][la] = "{}, {:%d de %B de %Y}".format(user_sac.city_u, created_date)
+                    dat = "{}, {:%d de %B de %Y}".format(
+                        user_sac.city_u, created_date)
+                    content_21[0][2][0][la] = self.translate_month(created_date.strftime("%B"), dat)
                 else:
-                    content_21[0][2][0][la] = "Armenia, {:%d de %B de %Y}".format(created_date)
+                    dat = "Armenia, {:%d de %B de %Y}".format(created_date)
+                    content_21[0][2][0][la] = self.translate_month(created_date.strftime("%B"), dat)
                 content_21[0][2][1][la] = "{:%I:%M %p}".format(created_date)
-                content_21[1][0] = "REGISTRO DE ASISTENCIA Y APROBACIÓN DEL ACTA No- {} DEL DÍA {:%d DEL MES DE %B DEL AÑO %Y}".format(
+                dat = "REGISTRO DE ASISTENCIA Y APROBACIÓN DEL ACTA No- {} DEL DÍA {:%d DEL MES DE %B DEL AÑO %Y}".format(
                     id_a, created_date).upper()
+                content_21[1][0] = self.translate_month(created_date.strftime("%B"), dat, upper=True)
                 content_21[1][3] = [
                     "1",
                     "",
@@ -108,10 +119,24 @@ class DocumentTool():
                 elif user_sac.bonding_type == 2:
                     content_21[1][3][5] = "X"
                 return content_21
-        except Exception:
-            return None
+        except Exception as ex:
+            print('exception', ex)
         
         
+    def translate_month(self, month, created_date, upper=False, lower=False):
+        ism = self.english_months.index(month.lower())
+        sm = self.spanish_months[ism]
+        ne = ''
+        if upper:
+            ne = created_date.replace(month.upper(), sm.upper())
+        elif upper:
+            ne = created_date.replace(month, sm.lower())
+        else:
+            ne = created_date.replace(month, sm.lower())
+        print(ne)
+        return ne
+        
+    
     # content : string - html data
     def get_content_data(self, content):
         body_h = self.extract_body_html(content)
@@ -238,9 +263,9 @@ class DocumentTool():
                 return footer_content
 
 
-#dt = DocumentTool()
-#docHtml = dt.html_to_string('2021.html')
-#doc = dt.html_to_string('./2020.html')
-#t = open('2021.txt', 'w')
+# dt = DocumentTool()
+# docHtml = dt.html_to_string('2021.html')
+# doc = dt.html_to_string('./2020.html')
+# t = open('2021.txt', 'w')
 # t.write(docHtml)
 # t.close()
