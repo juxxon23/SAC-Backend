@@ -133,7 +133,6 @@ class DocumentTool():
             ne = created_date.replace(month, sm.lower())
         else:
             ne = created_date.replace(month, sm.lower())
-        print(ne)
         return ne
         
     
