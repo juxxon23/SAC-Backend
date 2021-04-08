@@ -13,8 +13,9 @@ class Upfiles(MethodView):
             id_u = request.headers.get('id_u')
             id_a = request.headers.get('id_a')
             f = request.get_data()
-            n = 'app/data/users/{}/{}/data-{}'.format(id_u, id_a, randint(0, 1000))
-            with open(n, "wb") as fi:
+            n = 'app/data/users/{}/{}'.format(id_u, id_a)
+            p = '{}/data-{}'.format(n, randint(0, 1000))
+            with open(p, "wb") as fi:
                 fi.write(f)
             return jsonify({'status': 'ok'}), 200
         except Exception as ex:

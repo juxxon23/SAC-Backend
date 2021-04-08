@@ -31,7 +31,7 @@ content_21 = [
             [
                 'DIRECCIÓN GENERAL / REGIONAL / CENTRO', 
                 '', 
-                ''
+                'Centro de Comercio y Turismo'
             ]
         ], 
         [
